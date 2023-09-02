@@ -4,6 +4,7 @@ from app_course.views import CourseViewSet
 
 app_name = AppCourseConfig.name
 
+
 router = DefaultRouter()
 router.register(r'courses', CourseViewSet, basename='courses')
 
