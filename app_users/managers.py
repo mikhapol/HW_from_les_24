@@ -2,14 +2,14 @@ from django.contrib.auth.base_user import BaseUserManager
 
 
 class UserManager(BaseUserManager):
-
+    """Класс для реализации добавления superuser."""
     def create_user(self, email, password):
 
         if not email:
-            raise TypeError('Users must have an email address.')
+            raise TypeError('У пользователей должен быть адрес электронной почты.')
 
         if not password:
-            raise TypeError('Users must have a password.')
+            raise TypeError('У пользователей должен быть пароль.')
 
         user = self.model(email=self.normalize_email(email))
         user.set_password(password)

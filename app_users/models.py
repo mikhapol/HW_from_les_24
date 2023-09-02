@@ -6,6 +6,7 @@ NOT_NULLABLE = {'blank': False, 'null': False}
 
 
 class User(AbstractUser):
+    """Поля для модели обычного пользователя, но авторизация через email"""
     username = None
     email = models.EmailField(unique=True, verbose_name='почта')
 
