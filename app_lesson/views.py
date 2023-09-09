@@ -1,8 +1,7 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
 
+from app_course.permission import IsOwner, IsStaff
 from app_lesson.models import Lesson
-from app_lesson.permission import IsOwnerOrStaff
 from app_lesson.serializers import LessonSerializer
 
 
@@ -10,31 +9,30 @@ from app_lesson.serializers import LessonSerializer
 class LessonCreateAPIView(generics.CreateAPIView):
     """View для создания урока"""
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwner | IsStaff]
 
 
 class LessonListAPIView(generics.ListAPIView):
     """View чтобы получить список уроков"""
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated | IsOwnerOrStaff]
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     """View чтобы получить один урок по идентификатору"""
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwner | IsStaff]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
     """View чтобы отредактировать урок по идентификатору"""
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated | IsOwnerOrStaff]
+    permission_classes = [IsOwner | IsStaff]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     """View чтобы удалить урок по идентификатору"""
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwner | IsStaff]

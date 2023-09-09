@@ -15,9 +15,6 @@ class PaymentListAPIView(generics.ListAPIView):
     filterset_fields = ('paid_course', 'paid_lesson', 'payment_method')  # Набор полей для фильтрации
     ordering_fields = ('date',)
 
-    permission_classes = [IsAuthenticated]
-
 
 class PaymentCreateAPIView(generics.CreateAPIView):
     serializer_class = PaymentSerializer
-    permission_classes = [IsAuthenticated]
