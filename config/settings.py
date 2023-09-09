@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_filters',
+    'rest_framework_simplejwt',
 
     'app_users.apps.AppUsersConfig',
     'app_course.apps.AppCourseConfig',
@@ -151,11 +152,14 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'app_users:login'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication'
-    ],
     'DEFAULT_FILTER_BACKENDS': (
-            'django_filters.rest_framework.DjangoFilterBackend',
-        ),
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+    ),
 }
