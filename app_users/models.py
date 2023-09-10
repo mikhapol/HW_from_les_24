@@ -1,10 +1,16 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from app_users.managers import UserManager
 
 NULLABLE = {'blank': True, 'null': True}
 NOT_NULLABLE = {'blank': False, 'null': False}
+
+
+class UserRoles(models.TextChoices):
+    MEMBER = 'member', _('member')
+    MODERATOR = 'moderator', _('moderator')
 
 
 class User(AbstractUser):
@@ -13,13 +19,14 @@ class User(AbstractUser):
     username = None
 
     email = models.EmailField(unique=True, verbose_name='почта')
+    role = models.CharField(max_length=9, choices=UserRoles.choices, default=UserRoles.MEMBER)
 
     phone = models.CharField(max_length=35, verbose_name='телефон', **NULLABLE)
     city = models.CharField(max_length=35, verbose_name='город', **NULLABLE)
     avatar = models.ImageField(upload_to='users/', verbose_name='аватар', **NULLABLE)
 
-    verification_code = models.CharField(verbose_name='код верификации', max_length=255, **NULLABLE)
-    is_verified = models.BooleanField( verbose_name='значение верификации', default=False, **NULLABLE)
+    # verification_code = models.CharField(verbose_name='код верификации', max_length=255, **NULLABLE)
+    # is_verified = models.BooleanField(verbose_name='значение верификации', default=False, **NULLABLE)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
