@@ -17,8 +17,8 @@ class LessonTestCase(APITestCase):
         # Создание пользователя для тестирования
         self.user = User.objects.create(email='test_user@test.ru',
                                         phone='test_phone',
-                                        is_staff=False,
-                                        is_superuser=False,
+                                        is_staff=True,
+                                        is_superuser=True,
                                         is_active=True)
 
         self.user.set_password('qwerty')  # Устанавливаем пароль
@@ -50,8 +50,9 @@ class LessonTestCase(APITestCase):
         data = {
             'title': 'Урок 25.2 другой',
             "description": "Описание урока 25.2 другое",
+            'course': self.course.pk,
             'url': 'https://www.youtube.com/',
-            'owner': self.user.pk,
+            # 'owner': self.user.pk,
         }
 
         response = self.client.post(reverse('app_lesson:lesson_create'), data=data)  # Отправка запроса
@@ -63,7 +64,7 @@ class LessonTestCase(APITestCase):
     def test_list_lessons(self):
         """Тестирование списка уроков"""
 
-        response = self.client.get(reverse('app_lesson:lesson'))  # Запрос на получение списка уроков
+        response = self.client.get(reverse('app_lesson:lessons'))  # Запрос на получение списка уроков
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверка ответа на запрос
 

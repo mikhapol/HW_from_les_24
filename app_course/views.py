@@ -45,13 +45,13 @@ class SubscriptionCreateAPIView(generics.CreateAPIView):
 class SubscriptionDestroyAPIView(generics.DestroyAPIView):
     """Удаление подписки на курс на основе Generics"""
 
-    queryset = Course.objects.all()  # список уроков
+    queryset = Subscription.objects.all()  # список уроков
 
-    def perform_destroy(self, instance, **kwargs):
-        """Переопределение метода perform_destroy для удаления подписки на курс"""
-
-        user = self.request.user
-        # получаем подписку
-        subscription = Subscription.objects.get(course_id=self.kwargs['pk'], user=user)
-
-        subscription.delete()  # удаляем подписку
+    # def perform_destroy(self, instance, **kwargs):
+    #     """Переопределение метода perform_destroy для удаления подписки на курс"""
+    #
+    #     user = self.request.user
+    #     # получаем подписку
+    #     subscription = Subscription.objects.get(course_id=self.kwargs['pk'], user=user)
+    #
+    #     subscription.delete()  # удаляем подписку
