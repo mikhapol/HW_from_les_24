@@ -12,6 +12,8 @@ class Course(models.Model):
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
+    amount = models.IntegerField(default=0, verbose_name='цена курса', **NULLABLE)
+
     def __str__(self):
         return f'{self.title}'
 
