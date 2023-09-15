@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from app_course.models import Course, Subscription
+from app_course.services import get_payment_link
 from app_lesson.models import Lesson
 from app_lesson.serializers import LessonSerializer
 
@@ -9,6 +10,7 @@ class CourseSerializer(serializers.ModelSerializer):
     lessons_count = serializers.SerializerMethodField()  # Тип поля отвечающий за описание подсчёта количества уроков.
     lessons = LessonSerializer(many=True, source='lesson', read_only=True)  # Тип поля отвечающий за вывод уроков.
     is_subscribed = serializers.SerializerMethodField()  # Проверка подписки
+    payment_url = serializers.SerializerMethodField()  # Получение ссылки на оплату
 
     def get_lessons_count(self, course):
         """Метод для получения количества уроков в курсе"""
@@ -24,6 +26,10 @@ class CourseSerializer(serializers.ModelSerializer):
         """Метод для проверки подписки к курсу"""
 
         return Subscription.objects.filter(course=course, user=self.context['request'].user).exists()
+
+    def get_payment_url(self, instance):
+        payment_data = get_payment_link(instance)
+        return payment_data['url']
 
     class Meta:
         model = Course

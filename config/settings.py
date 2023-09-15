@@ -189,5 +189,4 @@ CSRF_TRUSTED_ORIGINS = [
     "https://read-and-write.example.com",
 ]
 
-CUR_API_URL = get_env_value('CUR_API_URL')
-CUR_API_KEY = get_env_value('CUR_API_KEY')
+STRIPE_API_KEY = get_env_value('STRIPE_API_KEY')
