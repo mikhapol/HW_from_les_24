@@ -18,6 +18,7 @@ class Course(models.Model):
         return f'{self.title}'
 
     class Meta:
+        managed = False
         verbose_name = 'курс'
         verbose_name_plural = 'курсы'
 

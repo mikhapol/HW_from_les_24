@@ -103,8 +103,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': get_env_value('POSTGRES_ENGINE'),
-        'NAME': get_env_value('POSTGRES_NAME'),
-        'HOST': get_env_value('POSTGRES_HOST'),
+        # 'NAME': get_env_value('POSTGRES_NAME'),
+        'NAME': 'postgres',
+        # 'HOST': get_env_value('POSTGRES_HOST'),
+        'HOST': 'db',
         'USER': get_env_value('POSTGRES_USER'),
         'PASSWORD': get_env_value('POSTGRES_PASSWORD'),
         'PORT': get_env_value('POSTGRES_PORT')
@@ -192,8 +194,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 STRIPE_API_KEY = get_env_value('STRIPE_API_KEY')
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
 EMAIL_HOST = get_env_value('EMAIL_HOST')
 EMAIL_PORT = get_env_value('EMAIL_PORT')
