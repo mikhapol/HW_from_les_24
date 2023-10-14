@@ -39,7 +39,7 @@ SECRET_KEY = get_env_value('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['84.201.152.25']
 
 # Application definition
 
