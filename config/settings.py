@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
@@ -38,8 +39,7 @@ SECRET_KEY = get_env_value('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['84.201.152.25']
 
 # Application definition
 
@@ -49,23 +49,32 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',  # обязательно для 'drf_yasg'
 
     'rest_framework',
+    'django_filters',
+    'rest_framework_simplejwt',
+
+    'drf_yasg',
+    'corsheaders',
+    'django_celery_beat',
 
     'app_users.apps.AppUsersConfig',
     'app_course.apps.AppCourseConfig',
     'app_lesson.apps.AppLessonConfig',
+    'app_payments.apps.AppPaymentsConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.CommonMiddleware',  # обязательно для 'corsheaders'
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',  # обязательно для 'corsheaders'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -88,21 +97,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': get_env_value('POSTGRES_ENGINE'),
-        'NAME': get_env_value('POSTGRES_NAME'),
-        'HOST': get_env_value('POSTGRES_HOST'),
+        # 'NAME': get_env_value('POSTGRES_NAME'),
+        'NAME': 'postgres',
+        # 'HOST': get_env_value('POSTGRES_HOST'),
+        'HOST': 'db',
         'USER': get_env_value('POSTGRES_USER'),
         'PASSWORD': get_env_value('POSTGRES_PASSWORD'),
         'PORT': get_env_value('POSTGRES_PORT')
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -122,18 +131,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'W-SU'
+# TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -149,6 +157,48 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'app_users.User'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = 'app_users:login'
+# С этим не работает 'swagger/' и 'redoc/'.
+# LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/'
+# LOGIN_URL = 'app_users:login'
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
+    ),
+    # 'DEFAULT_PAGINATION_CLASS':
+    #     'rest_framework.pagination. LimitOffsetPagination',
+    #     'PAGE_SIZE': 100
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
+}
+
+CORS_ALLOWED_ORIGINS = [
+    "https://read-only.example.com",
+    "https://read-and-write.example.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://read-and-write.example.com",
+]
+
+STRIPE_API_KEY = get_env_value('STRIPE_API_KEY')
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+EMAIL_HOST = get_env_value('EMAIL_HOST')
+EMAIL_PORT = get_env_value('EMAIL_PORT')
+EMAIL_HOST_USER = get_env_value('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_env_value('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = get_env_value('EMAIL_USE_SSL')
